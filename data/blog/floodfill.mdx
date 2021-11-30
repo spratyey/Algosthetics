@@ -1,0 +1,118 @@
+---
+title: 'Flood Fill'
+date: 2021-11-25T15:32:14Z
+lastmod: '2021-11-25'
+tags: ['BezierBusiness', 'BFS', 'seed-fill']
+draft: false
+summary: 'Your favorite childhood pastime: spamming the bucket tool randomly in MS Paint, explained. '
+layout: PostSimple
+
+---
+
+## Introduction
+
+If you were a 2000's kid with a box computer, you've most likely used MS Paint. If you've used that, you've definitely used the bucket tool. But, but, but, have you *ever* wondered how it works? This is how. (Yes, I'm practicing marketing.)
+
+## Flood Fill Algorithm
+
+Flood fill, also called seed fill, is an algorithm that determines and alters the area connected to a given node in a multi-dimensional array with some matching attribute. It is used in the bucket fill tool of paint programs to fill connected, similarly-colored areas with a different color, and in games such as Go and Minesweeper for determining which pieces are cleared.
+
+### **Recursive Stack-based algorithm**
+
+Well, intuitively, if the objective is to take a starting 'seed' and fill 'bounded areas of nodes with the current color' with the replacement color, then the simplest approach is to check all nodes adjacent to the initial/current node, and to keep doing that for every node encountered.
+
+**Pseudocode**
+
+```python
+def FloodFill(int x, int y, color fill_color):
+    if(nodeIsInside(x,y)) :
+        setColor(x,y,fill_color)
+        FloodFill(x-1,y,fill_color)
+        FloodFill(x+1,y,fill_color)
+        FloodFill(x,y-1,fill_color)
+        FloodFill(x,y+1,fill_color)
+```
+
+(**Note:** here, it is assumed that the nodeIsInside() method exists, and returns true for yet-unfilled nodes inside the area to be filled)
+
+This is called the 'four-way' flood fill for obvious reasons. It is very simple in terms of its logic and implementation, but at the cost of performance. Here, there are naturally several redundant cases where properly colored nodes are repeatedly called upon by the algorithm, simply because they happen to be adjacent to the 'current' node in some iteration.
+
+Similarly, there also exists an eight-way algorithm, which is employed in case diagonally adjacent nodes are also to be considered. The additional recursive calls made are:
+
+```python
+FloodFill(x-1,y+1,fill_color)
+FloodFill(x+1,y-1,fill_color)
+FloodFill(x+1,y+1,fill_color)
+FloodFill(x-1,y-1,fill_color)
+```
+
+Consequently, this approach is even more inefficient.
+
+## Hol up how does `nodeIsInside()` actually work
+
+The `nodeIsInside()` method is essentially comprised of two subroutines: Checking if the node is actually inside the bounded area and   the color-checking logic. While the latter is straightforward, the former utilizes a neat trick called the **counting number method.**
+
+Essentially, there are two ways for us to know if our point is inside of outside the simple figure:
+
+### The Odd-Even Rule
+
+In this technique, we will count the edge crossing along the line from any point x,y to infinity. If the number of interactions is odd, then the point x,y is an interior point; and if the number of interactions is even, then the point x,y is an exterior point. 
+
+<div style={{textAlign: 'center'}}>
+<Image alt="ocean" src="/static/images/flood/0.png" width={640} height={355} />
+</div>
+
+### The Non-Zero Winding Rule
+
+In another alternative method, we give directions to all the edges of the polygon. Draw a scan line from the point to be test towards the left most of X direction.
+
+- Give the value 1 to all the edges which are going to upward direction and all other -1 as direction values.
+- Check the edge direction values from which the scan line is passing and sum up them.
+- If the total sum of this direction value is non-zero, then this point to be tested is an **interior point,** otherwise it is an **exterior point**.
+- In this figure, we sum up the direction values from which the scan line is passing then the total is 1 – 1 + 1 = 1; which is non-zero. So the point is said to be an interior point.
+
+<div style={{textAlign: 'center'}}>
+<Image alt="ocean" src="/static/images/flood/1.png" width={640} height={363} />
+</div>
+
+
+## The Scan-Line Algorithm for Polygons
+
+For shapes bounded in the form of 'polygons' (ordered lists of vertices), we can instead have a much more efficient implementation of the flood fill algorithm. In the simplest of forms, ignoring all the more complex further optimizations, this basically consists of having an infinite-length scan-line such as y=c (where c is some constant), which 'sweeps' down the polygon. As it intersects with polygon edges, it fills the polygon between pairs of intersections
+
+<div style={{textAlign: 'center'}}>
+<Image alt="ocean" src="/static/images/flood/2.png" width={540} height={450} />
+</div>
+
+Here's a cool demo of how the scanline algorithm proceeds with filling the enclosed space
+
+<div style={{textAlign: 'center'}}>
+<Image alt="ocean" src="/static/images/flood/3.gif" width={318} height={300} />
+</div>
+
+## ...and the Ugly
+
+Things can get awkward when it comes to the interplay between raster floodfill and vector shapes. For instance, in Inkscape, the following issue has been reported by multiple users over the years
+
+> When using the paintbucket or 'flood fill' tool, it always leaves a small gap between the contour it is supposed to fill and the fill area. When exporting, these gaps show up as white dots for example (if the background is white). I would be desirable to be able to adjust the 'fill sensitivity', i.e. whether the fill tool fills the area completely with a small overlap with the contour (this is missing) or it leaves a smaller or larger (adjustable) gap.
+
+
+<div style={{textAlign: 'center'}}>
+<Image alt="ocean" src="/static/images/flood/4.png" width={600} height={320} />
+</div>
+
+Well, that certainly checks out. The point is, despite floodfill being designed for raster graphics, it was added to inkscape in version 0.47 owing to popular demand. But its implementation has been counterproductive and unintuitive instead. Rather than relying on its existing robust vector fill tools which rely on the boundary being bezier paths, the paint bucket tool, meant to simply 'fill bounded areas' acts as if it is taking a screenshot of the viewfinder and coloring it in afterwards, and that's because it is. Using the bucket tool while zoomed in reduces the size of the gaps, and vice versa.
+
+There's no real theoretical point here, the purpose of highlighting this is to show how ugly this seemingly elegant and simple functionality can get, depending on its implementation
+
+## Sources
+
+[A better Bucket Fill tool fill for Inkscape, Todor Imreorov](https://wiki.inkscape.org/wiki/A_better_Bucket_Fill_tool_fill)
+
+[QuickFill: An Efficient Flood Fill Algorithm, John Shaw](https://www.codeproject.com/Articles/6017/QuickFill-An-efficient-flood-fill-algorithm)
+
+[The Scanline Polygon Filling Algorithm](https://www.tutorialspoint.com/computer_graphics/polygon_filling_algorithm.htm)
+
+<div style={{textAlign: 'center'}}>
+<Image alt="ocean" src="/static/images/bars.png" width={720} height={8} />
+</div>

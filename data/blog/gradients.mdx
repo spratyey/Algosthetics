@@ -1,0 +1,184 @@
+---
+title: 'Colors and Gradients'
+date: 2021-11-26T15:32:14Z
+lastmod: '2021-11-26'
+tags: ['BezierBusiness', 'color-theory','lerps']
+draft: false
+summary: 'Something simple, but widely used. Gradients are stunning and impossibly interesting. Let us explore how one can generate a few fundamental gradient types.  '
+layout: PostSimple
+
+---
+
+## Colors Fundamentals
+
+Digitally, people talk about colors in terms of RGB, or hex codes. For the scope of this article, we refer to colors in terms of their RGB ratios. We can also convert hex colors to RGB using the following algorithm:
+
+```jsx
+function hexColorToFloatColor(hex){
+  return [
+    parseInt(hex.substring(0,2), 16) / 255,
+    parseInt(hex.substring(2,4), 16) / 255,
+    parseInt(hex.substring(4,6), 16) / 255
+  ];
+}
+```
+
+<div style={{textAlign: 'center'}}>
+<Image alt="ocean" src="/static/images/grad/0.png" width={300} height={295} />
+</div>
+
+<div style={{textAlign: 'center'}}>
+<Image alt="ocean" src="/static/images/grad/1.png" width={300} height={140} />
+</div>
+
+The above image is actually the color of our website background. 
+
+The tuple $(0,0,0)$ in RGB corresponds to black, and $(255,255,255)$ corresponds to white. Basically, the values of each can range from $0-255$. Now that results in a BIGGGG number of colors. Literally $255^3$ colors, and we can't tell most of the colors apart by an eye. That's part of the reason why color gradients work- the seamless blending from one color to another.
+
+On a screen, a pixel looks somewhat like this. The variation in the intensity of the red, green, and blue creates variation in colors. We use these variations to make our said "gradients".
+
+<div style={{textAlign: 'center'}}>
+<Image alt="ocean" src="/static/images/grad/2.png" width={57} height={56} />
+</div>
+
+<div style={{textAlign: 'center'}}>
+<Image alt="ocean" src="/static/images/grad/3.png" width={400} height={400} />
+</div>
+
+## Gradients
+
+"They come in all shapes and sizes"
+
+Yes, they really do. 
+
+**Axial gradients**
+
+<div style={{textAlign: 'center'}}>
+<Image alt="ocean" src="/static/images/grad/4.png" width={400} height={400} />
+</div>
+
+**Radial gradients**
+
+<div style={{textAlign: 'center'}}>
+<Image alt="ocean" src="/static/images/grad/5.png" width={400} height={400} />
+</div>
+
+And, there are conic ones, random ones, and a lot more. 
+
+## An Algorithm to Generate Linear Gradients
+
+The process of gradually shifting from one color to the other is called linear interpolation. 
+
+It's also called 'lerp', if you remember that term from the bezier article. 
+
+To visualise gradients, we think in terms of coordinates in the RGB plane instead of the XYZ coordinates. Basically, think of a gradient as a path between 2 colors. but, there isn't just one path between 2 colors, as in a normal XYZ plane. (We will talk about the smoothest path in a later section.)
+
+Consider the following gradient:
+
+### Simple Linear Gradient
+
+<div style={{textAlign: 'center'}}>
+<Image alt="ocean" src="/static/images/grad/6.png" width={640} height={40} />
+</div>
+
+Here, we use a pure red, and a pure blue. A color could be represented in its tuples that take values between 0 to 255. However, just to normalise, let's take the values to be between 1 and 0. Red would be (1.0, 0.0, 0.0) and blue would be (0.0, 0.0, 1.0)
+
+To define a function called 'lerp', let's define a couple of things:
+
+**Colors**
+
+An array with the tuples of both the colors as follows, wherein $R_n$ corresponds to the intensity of red of the $n$th color we choose for the extreme ends of the gradients.
+
+$$\begin{bmatrix} R_1 & G_1 & B_1\\ R_2 & G_2 & B_3 \end{bmatrix}$$
+
+```jsx
+function lerp(colors, value){
+    return [
+        colors[0][0] + (colors[1][0] - colors[0][0]) * value,
+        colors[0][1] + (colors[1][1] - colors[0][1]) * value,
+        colors[0][2] + (colors[1][2] - colors[0][2]) * value
+    ];
+}
+```
+
+In the example we considered, the gradient is $400$px wide, so I just need find $400$ values between $0$ and $1. (1 / 400) * i$ where $i$ goes from $1$ to $400$.
+
+What we expect is that at value $0.25$ we get color $0.75,0,0.25$, at $0.5$ we get color $0.5,0,0.5$ and at $0.75$ we get $0.25,0,0.75$ etc. You might be wondering why the middle value is 0. Well, that's because it corresponds to the intensity of Green in the colors. In pure red, and pure blue, there's no green! Hence, it doesn't even vary. 
+
+ What's happening is we find the distance between the points in terms of each component $R,G,B$. So along the red axis the difference is $1$, and we just multiply by how far along we are plus the starting value. Blue is the reverse, it's the same length but we're moving in the reverse direction and we start at $0$ instead of $1$. The sign is important to know if we are increasing or decreasing.  
+
+If this was a less simple color we might have length shorter than $1$ for the component but we're still just finding the fraction of the length that the current point represents.
+
+### Multi Stop Gradient
+
+One can also make gradients with multi stops, wherein the progression isn't hardcoded to fit only 2 values. 
+
+Here, let's go beyond colors. Just for fun. Let's consider 4-dimensional points. (Just to generalise the idea of lerps. 
+
+Here's an extremely unoptimised algorithm to find values of pixels for the gradients. If you want to actually draw the gradient you might instead precompute the stop calculations and iterate over the pixels here rather than call this function for each pixel.
+
+```jsx
+function linearGradient(stops, value) {
+    const stopLength = 1 / (stops.length - 1);
+    const valueRatio = value / stopLength;
+    const stopIndex = Math.floor(valueRatio);
+    if (stopIndex === (stops.length - 1)) {
+        return stops[stops.length - 1];
+    }
+    const stopFraction = valueRatio % 1;
+    return lerp(stops[stopIndex], stops[stopIndex + 1], stopFraction);
+}
+function lerp(pointA, pointB, normalValue) {
+    return [
+        pointA[0] + (pointB[0] - pointA[0]) * normalValue,
+        pointA[1] + (pointB[1] - pointA[1]) * normalValue,
+        pointA[2] + (pointB[2] - pointA[2]) * normalValue,
+        pointA[3] + (pointB[3] - pointA[3]) * normalValue,
+    ];
+}
+```
+
+We're not just hardcoding two values this time. The result indicates how far along the entire colour journey we are. To identify the colour at the value location, we must first determine which two colours we are sandwiched between. `StopIndex`, which is the value divided by the length between each stop, indicates this. We must floor it in order to obtain the integer index. 
+
+The first colour will be this, and the last colour will be `stopIndex + 1`. The only thing that's left is a new value between the two spots. Taking the modulo $1$ gives us the fractional bit of a float. Then it's the same as the $2$-stop problem, but with a fractional bit instead of the entire number.
+
+---
+
+We can make a loooot of different types of gradients with better optimisations. However, let's talk about one last thing. SMOOTH CURVES. Like, sharp ugly gradients are just sad. In the following gradient, you can see bands and separations.
+
+<div style={{textAlign: 'center'}}>
+<Image alt="ocean" src="/static/images/grad/7.png" width={640} height={320} />
+</div>
+
+The gradient can be smoothened to the following gradient, which is much more homogenous, has lesser width of dull boring colors. 
+
+<div style={{textAlign: 'center'}}>
+<Image alt="ocean" src="/static/images/grad/8.png" width={640} height={320} />
+</div>
+
+<div style={{textAlign: 'center'}}>
+<Image alt="ocean" src="/static/images/grad/9.png" width={640} height={269} />
+</div>
+
+The points that define a spline are known as "Control Points". One of the features of the Catmull-Rom spline is that the specified curve will pass through all of the control points - this is not true of all types of splines.
+
+Catmull-Rom is selected as it means that the input color stops will also appear on the final curve that we trace through 3D color space.
+
+In order to solve these issues, we can:
+
+1. Use a more perceptually uniform color space such as [CIELAB (L* a* b* )](https://en.wikipedia.org/wiki/CIELAB_color_space).
+2. Use Catmull-Rom spline interpolation to smoothly transition from one 3D L*a*b* vector to the next.
+
+In the L* a* b* color space, L* indicates lightness and a* and b* are chromaticity coordinates. a* and b* are color directions: +a* is the red axis, -a' is the green axis, +b* is the yellow axis and b* is the blue axis.
+
+## Resources to explore
+
+[Perceptually Smooth Multi-Color Linear Gradients, Matt DesLauriers](https://observablehq.com/@mattdesl/perceptually-smooth-multi-color-linear-gradients)
+
+[Linear Color Gradients from Scratch, ndesmic](https://dev.to/ndesmic/linear-color-gradients-from-scratch-1a0e)
+
+[Introduction to Catmull-Rom Splines](https://www.mvps.org/directx/articles/catmull/)
+
+<div style={{textAlign: 'center'}}>
+<Image alt="ocean" src="/static/images/bars.png" width={720} height={8} />
+</div>
