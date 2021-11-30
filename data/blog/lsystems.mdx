@@ -1,0 +1,95 @@
+---
+title: 'Lindenmayer Systems'
+date: 2021-11-27T15:32:14Z
+lastmod: '2021-11-27'
+tags: ['generating-art', 'simulation', 'fractals']
+draft: false
+summary: 'Complicated looking, beautiful, infinite patterns. '
+layout: PostSimple
+
+---
+
+<div style={{textAlign: 'center'}}>
+<Image alt="ocean" src="/static/images/lsys/0.jpg" width={500} height={500} />
+</div>
+
+## When it all started
+
+Biologist Aristid Lindenmayer created Lindenmayer systems, or L-systems, in 1968 to formalize patterns of bacteria growth. They were devised to provide a formal description of the development of such simple multicellular organisms and to illustrate the neighbourhood relationships between plant cells. Later on, this system was extended to describe higher plants and complex branching structures.
+
+## The whats
+
+L-systems are a recursive, string-rewriting framework, commonly used today in computer graphics to visualize and simulate organic growth, with applications in plant development, procedural content generation, and fractal-like art. 
+
+## The hows
+
+An L-system consists of an alphabet of symbols that can be used to make strings, a collection of production rules that expand each symbol into some larger string of symbols, an initial "axiom" string from which to begin construction, and a mechanism for translating the generated strings into geometric structures.
+
+### Rule
+
+Each rule, known as *production*, describes the transformation of one symbol to another symbol, series of symbols, or no symbol at all. On each iteration, the productions are applied to each character simultaneously, resulting in a new series of symbols.
+
+### Example of productions
+
+Productions in this rewriting system can be described with "before" and "after" states, often described as the *predecessor* and *successor*. For example, the production $a \longrightarrow ab$ represents that the symbol $a$ transforms into the symbols $ab$ on every iteration. The length of derivation, or the number of iterations, is represented by $n$. Given a word $a$ and productions  $a \longrightarrow ab$ and $b \longrightarrow a$, the following illustrates how the word transforms over several iterations, from $n=0,n=0$ to $n=4,n=4$.
+
+## Graphical Representation of L-systems
+
+L-systems can be represented visually via turtle graphics, of Logo fame. While L-systems are string rewriting systems, these strings are comprised of symbols, each which can represent some command. A turtle in computer graphics is similar to a pen plotter drawing lines in a 2D space. Imagine giving instructions to a pen plotter to draw a square: "draw 1cm. turn right. draw 1cm. turn right. draw 1cm. turn right. draw 1cm". Though plotters don't really have an orientation, an L-system's turtle can be represented by Cartesian coordinates x and y, and an angle $\alpha$ that describes its forward direction. From there, symbols in a string can represent commands to change the state of the turtle.
+
+## Implementation
+
+Two new symbols, square brackets, are introduced to represent a tree in an L-system's string, with an opening bracket indicating the start of a new branch, with the remaining symbols between the brackets being members of that branch. Symbols after the end bracket indicate returning to the point of the branch's origin. A stack is used to implement branching, storing the state of the turtle on the stack.
+
+- $[$ push the current turtle state onto the stack.
+- $]$ pop the top state from the stack and this becomes the current turtle state.
+
+Symbols in a branch are transformed and replaced just as they were outside of a branch. This allows recursive, fractal-like behaviour, with each branch forking into more branches, and so on.
+
+## Some cool examples
+
+1. A recursive tree
+
+Configuration
+
+```python
+axiom: "X"
+productions: { "X": "F[+X]X[-X]FX", "F" : "FF" }
+finals: 
+    "+":  => 45 deg right
+    "-":  => 45 deg left
+    "[]": => branch
+    "F,X" => forward
+```
+
+The axiom  X  can be thought of as the sort-of root, as the production rules 'branch out' and 'grow' from it, as does the tree. 'Branching out' is represented by  `F[+X]X[-X]FX`  , the exact pattern being branch_right, then grow, then branch_left then grow_again. Branching is performed at 45 degree angles. 'Growing' is simply forward doubling, i.e.  FF
+
+Result
+
+<div style={{textAlign: 'center'}}>
+<Image alt="ocean" src="/static/images/lsys/1.png" width={256} height={350} />
+</div>
+
+1. Koch fractals
+
+Configuration
+
+```python
+axiom: "+F",
+productions: {"F": "F+F--F+F"},
+finals: 
+    "+":  => 75 deg right
+	  "-":  => 75 deg left
+    "[]": => branch
+    "F":  => forward
+```
+
+The figure is simple one 'spike' repeated in a fractal-like self-duplicating manner. Hence, iterations start from the axiom  `+F`  (as opposed to just  `F` , in order to get the overall orientation of the drawing right) and then the rule  `F+F--F+F`  is repeated. The angle has been chosen to be 75 degrees.
+
+<div style={{textAlign: 'center'}}>
+<Image alt="ocean" src="/static/images/lsys/2.png" width={587} height={329} />
+</div>
+
+<div style={{textAlign: 'center'}}>
+<Image alt="ocean" src="/static/images/bars.png" width={720} height={8} />
+</div>
