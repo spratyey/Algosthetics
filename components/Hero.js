@@ -15,7 +15,7 @@ const Hero = () => {
                   
         
         <p className="mt-2 text-lg ">
-          Insert MarketingSpeak here
+          Insert CoolMarketingSpeak here
         </p>
 
       </div>
