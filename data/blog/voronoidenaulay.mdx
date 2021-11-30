@@ -1,0 +1,153 @@
+---
+title: 'Voronoi Diagrams and Denaulay Triangulation'
+date: 2021-11-20T15:32:14Z
+lastmod: '2021-11-20'
+tags: ['BezierBusiness', 'divide-and-conquer']
+draft: false
+summary: 'Creating a cool polygonal vector pattern given just a set of cleverly placed dots!'
+layout: PostSimple
+
+---
+
+# Voronoi/Denaulay
+
+## Pratyay Flexing.
+
+Look at his cool fan-art of the Armored Titan from the show 'Attack on Titan'. The geometric structure of the armour that covers this titan's body translates really well into this low-poly look.
+
+<div style={{textAlign: 'center'}}>
+<Image alt="ocean" src="/static/images/vor/0.png" width={640} height={174} />
+</div>
+
+Turns out, rather than drawing each polygon normally using bezier polygons and paths, there's a more convenient way to do this, i.e. using Inkscape's inbuilt Voronoi diagram generator.
+
+<div style={{textAlign: 'center'}}>
+<Image alt="ocean" src="/static/images/vor/1.png" width={440} height={405} />
+</div>
+
+This tool generates a cool polygonal pattern given just a set of cleverly placed dots!
+
+## The what, a brief introduction.
+
+Imagine a lot of points on a plane. Observe how none of the points lie within the circumcircles of the triangles. Circumcircles are circles such that the triangle's vertices lie on its circumference. Now this is a Voronoi/Denaulay triangulaton. 
+
+Guess, is it possible to draw such a form on 3 points on the same line? (nein.)
+
+<div style={{textAlign: 'center'}}>
+<Image alt="ocean" src="/static/images/vor/2.svg" width={400} height={400} />
+</div>
+
+## Understanding using an example
+
+The Voronoi diagram is a general solution to 2D proximity problems.
+A sample of the problems addressed by this technique include Closest Pair, All Nearest
+Neighbors, Euclidean Minimum Spanning Tree, Triangulation and Nearest Neighbor Search.
+
+Now, let's consider the example of vacation spots. or anything. Ordinarily, you'd choose the one that is the closest.
+
+Mathematically, the problem we are trying to solve is the following: Given a set `S` of `n`points
+in the plane, we wish to associate with each point s a region consisting of all points in the
+plane closer to `s` than any other point `s'`.
+in `S`. This can be described formally as:
+
+<div style={{textAlign: 'center'}}>
+$$\operatorname{Vor}(s)=\left\{p: \text { distance }(s, p) \leq \text { distance }\left(s^{\prime}, p\right), \forall s^{\prime} \in S\right\}$$
+</div>
+
+<div style={{textAlign: 'center'}}>
+<Image alt="ocean" src="/static/images/vor/3.png" width={400} height={400} />
+</div>
+
+The figure above is what we call a Voronoi diagram. 
+
+The black dots represent the vacation spots, and the entire rectangle represents the whole region. On basis of proximity to the spots, the town is divided into colourful cells! 
+
+Such diagrams that encode proximity information, help us answer questions like, '*Which shop is nearest to point A?'.*
+
+Now, think about how you would measure distance between 2 places. There are several distance metrics you could use, the simplest and most familiar of all being the Euclidean distance. (The one resembling the pythagora's formula, yes.)
+
+However, one could just as easily use alternative measures of distance, say for instance, the Manhattan distance between two points, which is:
+
+<div style={{textAlign: 'center'}}>
+$$d\left[\left(x_{1}, y_{1}\right),\left(x_{2}, y_{2}\right)\right]=\left|x_{1}-x_{2}\right|+\left|y_{1}-y_{2}\right|$$
+</div>
+
+This new measure yields the following diagram for the same input points:
+
+<div style={{textAlign: 'center'}}>
+<Image alt="ocean" src="/static/images/vor/4.png" width={400} height={400} />
+</div>
+
+## Making Voronoi Diagrams
+
+There are many intuitive methods to construct a Voronoi region for a given point s in set
+`S`. 
+
+ 1. We can take all of the perpendicular bisectors of the segments connecting s to the
+remaining members of `S`. 
+ 2. We can then use these rays to delimit half-planes. 
+
+The intersection of all half-planes containing `s` is the Voronoi region for `s`. 
+
+Alternatively, we can start with the segments connecting `s` to all remaining members of `S`. We then gradually extend lines outward along the perpendicular bisector of these segments until they intersect.
+
+Finally, the Voronoi diagram is the union of all the Voronoi regions in the set, mathematically, it would look like this:
+
+<div style={{textAlign: 'center'}}>
+$$\operatorname{Vor}(S)=\bigcup_{s \in S} \operatorname{Vor}(s)$$
+</div>
+
+## Enter Graph Theory
+
+Formally, a Voronoi diagram is a planar graph where every vertex has degree *three.* Its complexity is linear, i.e. for *n* sites, there are *n* faces, at most *2n-5* vertices, and at most *3n-6* edges. (Let's say the complexity refers to the degree of sites/faces )
+
+
+In graph theory, a *dual graph* of a plane graph **`G`** is a graph that has a vertex for each face of **`G`**.
+
+Each edge of **`G`** has a *dual-edge* whose endpoints are the *dual-vertices* corresponding to the faces on either side of the edge.
+
+A *triangulation* of a set of points **`P`** in a plane is a partition of the convex hull (the smallest [convex set](https://en.wikipedia.org/wiki/Convex_set) that contains **`P`**) into [simplices](https://en.wikipedia.org/wiki/Simplex) (triangles, in the 2D case), such that they satisfy the following conditions. 
+
+- The union of all these simplices equals the convex hull
+- Any pair of these intersect in a *(possibly empty)* common face.
+
+ Interestingly enough, **it turns out that `DT(P)` (Delaunay triangulation using a discrete set of points P) corresponds to the *dual graph* of the Voronoi diagram for `P`.**
+
+
+## Divide And Conquer Algorithm for Voronoi Construction
+
+The naive approach consists of constructing Voronoi regions for each input point, i.e. for each $p_i$, construct $\operatorname{Vor}\left(p_{i}\right)=\bigcap_{j \neq i} H_{i j}$
+
+Disadvantages:\
+• It can cause inconsistency due to precision problems\
+• It does not produce immediate neighborhood information\
+• It runs in $O(n^2 \log n)$ time
+
+Divide and Conquer Approach:
+
+In this algorithm, one recursively draws a line to split the vertices into two sets. The Voronoi Region / Delaunay triangulation is computed for each set, and then the two sets are merged along the splitting line. Using some clever tricks, the merge operation can be done in time $O(n)$, so the total running time is $O(n \log n)$.
+
+Sketch of logic:
+
+- Let `P` be a set of n points in the plane.
+- If the points are vertically partitioned into two subsets `R` and `B`:
+- Consider the Voronoi diagram of the sets `R` and `B`
+- We observe that the Voronoi diagram of `P` substantially coincides with the Voronoi diagrams of `R` and `B`!
+- In fact, there exists a monotone chain of edges of `Vor(P)` such that `Vor(P)` coincides with
+`Vor(R)` to the left of the chain, and with `Vor(B)` to its right.
+
+<div style={{textAlign: 'center'}}>
+<Image alt="ocean" src="/static/images/vor/5.png" width={309} height={388} />
+</div>
+
+## Sources
+
+[Introduction to Voronoi Diagrams, Dr. Roberto Tamissa, 1993](http://cs.brown.edu/courses/cs252/misc/resources/lectures/pdf/notes09.pdf)
+
+[A Divide-and-Conquer Algorithm for Computing Voronoi Diagrams, Smith, Trefftz and DeVries, 2020](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7840081/)
+
+[Primitives for the manipulation of general subdivisions and the computations of Voronoi diagrams, Guibas ,Stolfi, 1985](https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.476.5094)
+
+<div style={{textAlign: 'center'}}>
+<Image alt="ocean" src="/static/images/bars.png" width={720} height={8} />
+</div>

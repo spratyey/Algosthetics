@@ -1,6 +1,6 @@
 const siteMetadata = {
-  title: 'Next.js Starter Blog',
-  author: 'Tails Azimuth',
+  title: 'Algosthetics',
+  author: 'Pratyay Suvarnapathaki, Varshita Kolipaka',
   headerTitle: 'Algosthetics',
   description: 'A blog created with Next.js and Tailwind.css',
   language: 'en-us',

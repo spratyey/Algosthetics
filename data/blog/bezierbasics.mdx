@@ -1,0 +1,236 @@
+---
+title: 'Bezier Basics'
+date: 2021-11-16T15:32:14Z
+lastmod: '2021-11-16'
+tags: ['BezierBusiness', 'lerps']
+draft: false
+summary: 'An overview of the new features released in v1 - code block copy, multiple authors, frontmatter layout and more'
+layout: PostSimple
+
+---
+
+## History
+
+If you've ever done graphic design, you've probably used bezier curves without knowing it. "Beh-zee-egh". Sounds french, right? Well, it is. French engineer Pierre Bezier designed it while working in the company 'Renault'. 
+
+## Curves
+
+One's idea of 'curves' is either a good ol' $y=f(x)$ or 'circular round-y things'.  But curves could be parametrically altercated to form loops and weird stuff.
+
+What counts as a curve (A bezier curve)? A curve with 3 or more points- Start, end and all the other control points. More number of control points means higher precision. 
+
+All of a sudden, we have a computationally efficient and elegant way to define and interact with curves and graphics. After that, we can do crazy stuff like have coordinate spaces and wacky 'local geometries' for points that let developers do stuff like procedural generation and stuff. (Out of the scope of this section.)
+
+## Why
+
+Curves and Paths form the very backbone of modern graphics, with applications ranging from video game models to digital animation, to web design and more. 
+
+<div style={{textAlign: 'center'}}>
+<Image alt="ocean" src="/static/images/bez/0.png" width={440} height={400} />
+</div>
+
+
+Most of those who say they've 'given the design a shot but found that it *just isn't for them'* have probably installed photoshop or Inkscape clicked on the pen tool and tried to figure it out, only to get confused and quit, never to return again. 
+
+Anybody who cares about any sort of computer graphics-related domain should care about bezier curves. So, *vamos*.
+
+*insert profound phrase here*
+
+<div style={{textAlign: 'center'}}>
+<Image alt="ocean" src="/static/images/bez/1.png" width={440} height={440} />
+</div>
+
+
+## **Linear Interpolation**
+
+This is a method of curve fitting that uses linear polynomials to construct new data points within the range of a discrete measurable set of known data points. It is a form of approximation. 
+
+Let's consider two distinct points $P_0$ and $P_1$, and another point $P$ that's located between them. Here, all these points are the control points.
+
+We can define the position of $P$ with a value between $0$ and $1$ named $t$ that is somewhat like a percentage:
+
+- if $t = 1$, $P$ will move to $P_1$
+- if $t = 0$, $P$ will move to $P_0$
+- Values between $0$ and $1$ would be between of $P_0$ and $P_1$
+
+This functionality is called 'Linear Interpolation' or ✨lerp✨ in short. Mathematically, you can express this idea as:
+
+$$P=(1-t)P_0+tP_1$$
+
+<div style={{textAlign: 'center'}}>
+<Image alt="ocean" src="/static/images/bez/f0.png" width={320} height={160} />
+</div>
+
+Let's add another point! We can now have two *interpolated points*, between pairwise segments, moving respectively on the axis $P_0 \rightarrow P_1$ and $P_1 \rightarrow P_2$. Linking these two points with a segment and positioning an interpolated point on this line as well gives us something rather interesting: **the dot follows a specific path. It resembles a curve**. This specifc curve is called a **Quadratic Bézier curve**.
+<div style={{textAlign: 'center'}}>
+<Image alt="ocean" src="/static/images/bez/f1.png" width={384} height={281} />
+</div>
+
+Similarly, we get a **Cubic Bezier Curve** too! And that might sound familiar to frontend developers (or really anyone who has bashed their own head in trying to make some CSS flow *just* right) as cubic beziers are extensively used for animation pacing, normally called 'easing'. 
+
+
+
+## De Casteljau's Algorithm
+
+The polynomials as we've seen were not applied to graphics until a 50-odd-years after their inception when mathematician Paul de Casteljau developed his algorithm, and he became the first to apply them to computer-aided design. This algorithm was numerically stable. This basically refers to the property of algorithms, that,  errors in the input become less and less significant as the algorithm executes, having a minimal effect on the final output.
+
+<div style={{textAlign: 'center'}}>
+<Image alt="ocean" src="/static/images/bez/f2.png" width={384} height={148} />
+</div>
+
+As we see here, increasing the order of the bezier curve is simply equivalent to adding more and more nested lerps! This is a geometric approach to curve drawing, and it's really easy to implement. So easy, in fact, one can do it by hand with a pencil and ruler.
+
+### Steps
+
+1. Treat $t$ as a ratio (which it is). $t=0$ is $0$ percent along a line, $t=1$ is $100$ percent along a line.
+2. Take all lines between the curve's defining points. For an order $n$ curve, that's $n$ lines.
+3. Place markers along each of these lines, at distance $t$. So if $t$ is $0.2$, place the mark at $20$% from the start, $80$% from the end.
+4. Now form lines between **those** points. This gives $n-1$ lines.
+5. Place markers along each of these lines at distance $t$.
+6. Form lines between those points. That'll be $n-2$ lines.
+7. Place markers, form lines, place markers, etc.
+8. Repeat this until you have only one line left. The point $t$ on that line coincides with the original curve point at $t$
+
+### Pseudocode
+
+```jsx
+function drawCurvePoint(points[], t):
+  if(points.length==1):
+    draw(points[0])
+  else:
+    newpoints=array(points.size-1)
+    for(i=0; i<newpoints.length; i++):
+      x = (1-t) * points[i].x + t * points[i+1].x
+      y = (1-t) * points[i].y + t * points[i+1].y
+      newpoints[i] = new point(x,y)
+    drawCurvePoint(newpoints, t)
+```
+
+## All Good Things Must Be Mathified
+
+<div style={{textAlign: 'center'}}>
+<Image alt="ocean" src="/static/images/bez/2.png" width={672} height={337} />
+</div>
+
+
+At the school level, polynomials look like $ax^n+bx^{n-1}+\dots +zx^0$. Now, in a similar vein, since we know that curves are just lerps all the way down. Yes, we're just casually using lerps now. 
+
+$$
+\begin{array}{l}
+\text { Linear }=(1-t)+t \\
+\text { Quadratic }=(1-t)^{2}+2 \cdot(1-t) \cdot t+t^{2} \\
+\text { Cubic }=(1-t)^{3}+3 \cdot(1-t)^{2} \cdot t+3 \cdot(1-t) \cdot t^{2}+t^{3}
+\end{array}
+$$
+
+
+Code to generate such polynomials:
+
+```python
+def Bezier(n,t):
+  sum = 0
+  for(k=0; k<n; k++):
+    sum += n!/(k!*(n-k)!) * (1-t)^(n-k) * t^(k)
+  return sum
+```
+
+But we can do better! (By having a lookup table instead of doing expensive calculations all the time)
+
+```python
+lut = [      [1],            #n=0
+            [1,1],           #n=1
+           [1,2,1],          #n=2
+          [1,3,3,1],         #n=3
+         [1,4,6,4,1],        #n=4
+        [1,5,10,10,5,1],     #n=5
+       [1,6,15,20,15,6,1]    #n=6
+]   
+
+# these are just pascal's triangles!
+
+def binomial(n,k):
+  while(n >= lut.length):
+    s = lut.length
+    nextRow = new array(size=s+1)
+    nextRow[0] = 1
+    for(i=1, prev=s-1; i<s; i++):
+      nextRow[i] = lut[prev][i-1] + lut[prev][i]
+    nextRow[s] = 1
+    lut.add(nextRow)
+  return lut[n][k]
+```
+
+### General Formula
+
+$$\operatorname{Bézier}(n, t)=\sum_{i=0}^{n} \underbrace{\left(\begin{array}{c}n \\i\end{array}\right)}_{\text {binomial term }} \cdot \underbrace{(1-t)^{n-i} \cdot t^{i}}_{\text {polynomial term }}$$
+
+Now, of course, what makes bezier curves so incredible is that they can be 'controlled' and manipulated to produce all kinds of cool art and graphics!
+
+Being interpolation functions, curves take a set of points and generate values somewhere "between" those points. One of the consequences of this is that you'll never be able to generate a point that lies outside the outline for the control points, commonly called the "hull" for the curve. In general, an `n`-order curve has `n-1` control points. (Picture this. A Quadratic polynomial curve has one turning point. Cubic has two, and so on.)
+
+And the neat thing is, we can control the final output of the Bezier curve by controlling how each point contributes to the value generated by the function. If we want to change the curve, we need to change the weights of each point, effectively changing the interpolations. The way to do this is about as straightforward as possible: just multiply each point with a value that changes its strength. These values are conventionally called "weights", and we can add them to our original Bézier function:
+
+$$\operatorname{Bézier}(n, t)=\sum_{i=0}^{n} \underbrace{\left(\begin{array}{c}n \\i\end{array}\right)}_{\text {binomial term }} \cdot \underbrace{(1-t)^{n-i} \cdot t^{i}}_{\text {polynomial term }} \cdot \underbrace{w_{i}}_{\text {weight }}$$
+
+```python
+def Bezier(n,t,w[]):
+  sum = 0
+  for(k=0; k<=n; k++):
+    sum += w[k] * binomial(n,k) * (1-t)^(n-k) * t^(k)
+  return sum
+```
+
+The GUI analogue is 'handles' . Manipulating the 'handles' of a path in say Inkscape or Photoshop lets us control the trajectory of the path.
+
+<div style={{textAlign: 'center'}}>
+<Image alt="ocean" src="/static/images/bez/3.png" width={440} height={440} />
+</div>
+
+
+
+
+## Matrices (because why not.)
+
+We can represent Bézier curves as matrix operations, by expressing the Bézier formula as a polynomial basis function and a coefficients matrix, and the coordinates as the matrix.
+
+Let's take the example of a cubic curve. Using $P$... to refer to coordinate values "in one or more dimensions"
+
+$$B(t)=P_{1} \cdot(1-t)^{3}+P_{2} \cdot 3 \cdot(1-t)^{2} \cdot t+P_{3} \cdot 3 \cdot(1-t) \cdot t^{2}+P_{4} \cdot t^{3}$$
+
+We can also represent Bézier curves as matrix operations, by expressing the Bézier formula as a polynomial basis function and a coefficients matrix, and the actual coordinates as a matrix. 
+
+Disregarding our actual coordinates for a moment, we can write this as a sum of four terms (Above equation but without the P's)
+
+$$B(t)=(1-t)^{3}+3 \cdot(1-t)^{2} \cdot t+3 \cdot(1-t) \cdot t^{2}+t^{3}$$
+
+Expanding, we get the following.
+
+$$\begin{aligned}\ldots &=-1 \cdot t^{3}+3 \cdot t^{2}-3 \cdot t+1 \\&++3 \cdot t^{3}-6 \cdot t^{2}+3 \cdot t+0 \\&+-3 \cdot t^{3}+3 \cdot t^{2}+0 \cdot t+0 \\&++1 \cdot t^{3}+0 \cdot t^{2}+0 \cdot t+0\end{aligned}$$
+
+Now, this can be visualized as four matrix operations. 
+
+$$\left[\begin{array}{llll}t^{3} & t^{2} & t & 1\end{array}\right] \cdot\left[\begin{array}{c}-1 \\3 \\-3 \\1\end{array}\right]+\left[\begin{array}{llll}t^{3}&t^{2} & t & 1\end{array}\right] \cdot\left[\begin{array}{c}3 \\-6 \\3 \\0\end{array}\right]+\left[\begin{array}{llll}t^{3} & t^{2} & t & 1\end{array}\right] \cdot\left[\begin{array}{c}-3 \\3 \\0 \\0\end{array}\right]+\left[\begin{array}{llll}t^{3} & t^{2} & t & 1\end{array}\right] \cdot\left[\begin{array}{l}1 \\0 \\0 \\0\end{array}\right]$$
+
+Now, this isn't the exact same logic, but besides being computationally nice to work with, a matrix representation allows us to extend the idea to path operations too!
+
+Here is an example of applying the 'skew' and 'rotate' operations to make text appear as if it were projected onto the surface of a cube
+
+
+<div style={{textAlign: 'center'}}>
+<Image alt="ocean" src="/static/images/bez/4.png" width={657} height={350} />
+</div>
+
+
+## Sources
+
+['An Ode To Bezier Curves' by Takashi Wickes](https://blog.prototypr.io/an-ode-to-the-bezier-curve-3eb9eca038ff)
+
+['A Primer on Bezier Curves' by Pomax](https://pomax.github.io/bezierinfo/)
+
+['From Math To Motion' by Maxime Heckel](https://blog.maximeheckel.com/posts/cubic-bezier-from-math-to-motion/)
+
+['The Beauty of Bezier Curves' by Freya Holmer](https://www.youtube.com/watch?v=aVwxzDHniEw)
+
+<div style={{textAlign: 'center'}}>
+<Image alt="ocean" src="/static/images/bars.png" width={720} height={8} />
+</div>

@@ -22,7 +22,7 @@ export default function TitleAnim() {
           width: 1em;
           height: 1em;
           border-radius: 50%;
-          background-color: hsl(calc(160 + 18 * var(--translate)), 100%, 80%);
+          background-color: hsl(calc(160 + 18 * var(--translate)), 58%, 66%);
           mix-blend-mode: difference;
           -webkit-animation: move 10s calc(-10s + var(--translate) * 0.15s) ease-in-out infinite;
                   animation: move 10s calc(-10s + var(--translate) * 0.15s) ease-in-out infinite;

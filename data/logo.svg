@@ -1,3 +1,134 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid meet" viewBox="344.5639097744361 330.27819548872174 111.73684210526318 91.21804511278197" width="53.87" height="43.61"><defs><path d="M453.3 331.28L453.3 359.85L388.64 418.5L388.64 388.42L453.3 331.28Z" id="aFZf6T5ED"></path><linearGradient id="gradientb2ThqnP5Op" gradientUnits="userSpaceOnUse" x1="420.97" y1="331.28" x2="420.97" y2="418.5"><stop style="stop-color: #06b6d4;stop-opacity: 1" offset="0%"></stop><stop style="stop-color: #67e8f9;stop-opacity: 1" offset="100%"></stop></linearGradient><path d="M410.23 331.28L410.23 359.85L345.56 418.5L345.56 388.42L410.23 331.28Z" id="a9fehgwfM"></path><linearGradient id="gradientk1wNV9Ostb" gradientUnits="userSpaceOnUse" x1="377.89" y1="331.28" x2="377.89" y2="418.5"><stop style="stop-color: #06b6d4;stop-opacity: 1" offset="0%"></stop><stop style="stop-color: #67e8f9;stop-opacity: 1" offset="100%"></stop></linearGradient></defs><g><g><use xlink:href="#aFZf6T5ED" opacity="1" fill="url(#gradientb2ThqnP5Op)"></use></g><g><use xlink:href="#a9fehgwfM" opacity="1" fill="url(#gradientk1wNV9Ostb)"></use></g></g></svg>
+<svg
+   version="1.1"
+   preserveAspectRatio="xMidYMid meet"
+   viewBox="344.5639097744361 330.27819548872174 111.73684210526318 91.21804511278197"
+   width="53.87"
+   height="43.61"
+   id="svg111"
+   sodipodi:docname="logo.svg"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20, custom)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview113"
+     pagecolor="#ffffff"
+     bordercolor="#999999"
+     borderopacity="1"
+     inkscape:pageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     showgrid="false"
+     inkscape:zoom="4.5686616"
+     inkscape:cx="66.211951"
+     inkscape:cy="41.368789"
+     inkscape:window-width="1898"
+     inkscape:window-height="1034"
+     inkscape:window-x="8"
+     inkscape:window-y="32"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg111" />
+  <defs
+     id="defs99">
+    <path
+       d="M453.3 331.28L453.3 359.85L388.64 418.5L388.64 388.42L453.3 331.28Z"
+       id="aFZf6T5ED" />
+    <linearGradient
+       id="gradientb2ThqnP5Op"
+       gradientUnits="userSpaceOnUse"
+       x1="420.97"
+       y1="331.28"
+       x2="420.97"
+       y2="418.5">
+      <stop
+         style="stop-color: #06b6d4;stop-opacity: 1"
+         offset="0%"
+         id="stop88" />
+      <stop
+         style="stop-color: #67e8f9;stop-opacity: 1"
+         offset="100%"
+         id="stop90" />
+    </linearGradient>
+    <path
+       d="M410.23 331.28L410.23 359.85L345.56 418.5L345.56 388.42L410.23 331.28Z"
+       id="a9fehgwfM" />
+    <linearGradient
+       id="gradientk1wNV9Ostb"
+       gradientUnits="userSpaceOnUse"
+       x1="377.89"
+       y1="331.28"
+       x2="377.89"
+       y2="418.5">
+      <stop
+         style="stop-color: #06b6d4;stop-opacity: 1"
+         offset="0%"
+         id="stop94" />
+      <stop
+         style="stop-color: #67e8f9;stop-opacity: 1"
+         offset="100%"
+         id="stop96" />
+    </linearGradient>
+  </defs>
+  <g
+     id="g1379"
+     transform="matrix(0.91697489,0,0,0.91697489,34.133049,34.762513)">
+    <path
+       style="fill:#ebf4f8;fill-opacity:1;stroke:none;stroke-width:1.04625;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;stop-color:#000000"
+       d="m 358.95253,402.58944 12.28467,-21.27767 12.28467,21.27767 z"
+       id="path10795"
+       inkscape:export-filename="/home/praty/Documents/design/algosthetics6.png"
+       inkscape:export-xdpi="330.69455"
+       inkscape:export-ydpi="330.69455" />
+    <path
+       style="fill:#b877db;fill-opacity:1;stroke:none;stroke-width:1.04625;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;stop-color:#000000"
+       d="m 401.9547,421.19607 c 2.68619,-15.75855 -12.00161,-23.79681 -21.68822,-38.93263 -9.76313,-15.25539 -0.52616,-29.09097 -0.52616,-29.09097 l 16.90528,28.21912 7.91685,21.19785 z"
+       id="path10867"
+       sodipodi:nodetypes="cscccc"
+       inkscape:export-filename="/home/praty/Documents/design/algosthetics6.png"
+       inkscape:export-xdpi="330.69455"
+       inkscape:export-ydpi="330.69455" />
+    <path
+       style="fill:#eac051;fill-opacity:1;stroke:none;stroke-width:1.04625;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;stop-color:#000000"
+       d="m 383.74834,336.03125 c 0,0 -7.21511,17.13786 11.50066,37.90469 18.50295,20.53068 11.85301,41.13942 5.59841,47.26013 0,0 7.71109,-14.95123 -12.75671,-38.58269 -20.46781,-23.63145 -8.99796,-45.43028 -4.34236,-46.58213 z"
+       id="path10832"
+       sodipodi:nodetypes="cscsc"
+       inkscape:export-filename="/home/praty/Documents/design/algosthetics6.png"
+       inkscape:export-xdpi="330.69455"
+       inkscape:export-ydpi="330.69455" />
+    <g
+       id="g27730"
+       transform="matrix(2.0925105,0,0,2.0925105,240.01745,449.29426)">
+      <path
+         id="rect11248"
+         style="fill:#ebf4f8;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-linecap:square;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;stop-color:#000000"
+         d="m 73.000365,-45.667459 5.810843,-6.219265 13.479667,23.347464 -5.81084,6.219265 z"
+         sodipodi:nodetypes="ccccc"
+         inkscape:export-filename="/home/praty/Documents/design/algosthetics6.png"
+         inkscape:export-xdpi="330.69455"
+         inkscape:export-ydpi="330.69455" />
+      <path
+         style="fill:#ebf4f8;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;stop-color:#000000"
+         d="m 86.480025,-22.319994 9.68415,-3e-6 -3.8733,-6.219263 z"
+         id="path11698"
+         inkscape:export-filename="/home/praty/Documents/design/algosthetics6.png"
+         inkscape:export-xdpi="330.69455"
+         inkscape:export-ydpi="330.69455" />
+      <path
+         style="fill:#ebf4f8;fill-opacity:1;stroke:none;stroke-width:0.5;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;stop-color:#000000"
+         d="m 73.000364,-45.66746 -1.07334,-1.859069 4.71528,-8.167095 2.50272,4.334842 z"
+         id="path11700"
+         inkscape:export-filename="/home/praty/Documents/design/algosthetics6.png"
+         inkscape:export-xdpi="330.69455"
+         inkscape:export-ydpi="330.69455" />
+      <path
+         style="fill:#ebf4f8;fill-opacity:1;stroke:none;stroke-width:0.499999;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;stop-color:#000000"
+         d="m 86.480025,-22.319994 0.24264,-6.860411 5.56821,0.641145 -0.0878,5.174416 z"
+         id="path22072"
+         inkscape:export-filename="/home/praty/Documents/design/algosthetics6.png"
+         inkscape:export-xdpi="330.69455"
+         inkscape:export-ydpi="330.69455" />
+    </g>
+  </g>
+</svg>
