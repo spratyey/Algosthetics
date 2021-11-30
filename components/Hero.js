@@ -15,7 +15,7 @@ const Hero = () => {
                   
         
         <p className="mt-2 text-lg ">
-          A Primer on Algorithms and Aesthetics
+          When CS Students Try Art 
         </p>
 
       </div>
